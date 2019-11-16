@@ -1,105 +1,41 @@
 # Building a Restful CRUD API with Node.js, Express and MongoDB #
-## we’ll be building a RESTful CRUD (Create, Retrieve, Update, Delete) API with Node.js, Express and MongoDB. ##
-### We’ll use Mongoose for interacting with the MongoDB instance.###
+## We’ll be building a RESTful CRUD (Create, Retrieve, Update, Delete) API with Node.js, Express and MongoDB. ##
+### We’ll use Mongoose for interacting with the MongoDB instance. ###
 
 Express is one of the most popular web frameworks for node.js. It is built on top of node.js http module, and adds support for routing, middleware, view system etc. It is very simple and minimal, unlike other frameworks that try do way to much, thereby reducing the flexibility for developers to have their own design choices.
 
 Mongoose is an ODM (Object Document Mapping) tool for Node.js and MongoDB. It helps you convert the objects in your code to documents in the database and vice versa.
 
-Before proceeding to the next section, Please install MongoDB in your machine if you have not done already. Checkout the official MogngoDB installation manual for any help with the installation.
+## Prerequisites:  Please install MongoDB in your machine if you have not done already. Checkout the official MogngoDB installation manual for any help with the installation. ##
 
 
- 
-Our Application
+### Our Application ###
 In this tutorial, We will be building a simple Note-Taking application. We will build Rest APIs for creating, listing, editing and deleting a Note.
 
 We’ll start by building a simple web server and then move on to configuring the database, building the Note model and different routes for handling all the CRUD operations.
 
 Finally, we’ll test our REST APIs using Postman.
 
-Also, In this post, we’ll heavily use ES6 features like let, const, arrow functions, promises etc. It’s good to familiarize yourself with these features. I recommend this re-introduction to Javascript to brush up these concepts.
+We’ll heavily use ES6 features like let, const, arrow functions, promises etc. It’s good to familiarize yourself with these features. I recommend this re-introduction to Javascript to brush up these concepts.
 
-Well! Now that we know what we are going to build, We need a cool name for our application. Let’s call our application EasyNotes.
-
-Creating the Application
-1. Fire up your terminal and create a new folder for the application.
+### Creating the Application
+#### 1. Fire up your terminal and create a new folder for the application.
 
 $ mkdir node-easy-notes-app
-2. Initialize the application with a package.json file
+#### 2. Initialize the application with a package.json file
 
 Go to the root folder of your application and type npm init to initialize your app with a package.json file.
 
 $ cd node-easy-notes-app
 $ npm init
-name: (node-easy-notes-app) 
-version: (1.0.0) 
-description: Never miss a thing in Life. Take notes quickly. Organize and keep track of all your notes.
-entry point: (index.js) server.js
-test command: 
-git repository: 
-keywords: Express RestAPI MongoDB Mongoose Notes
-author: callicoder
-license: (ISC) MIT
-About to write to /Users/rajeevkumarsingh/node-easy-notes-app/package.json:
 
-{
-  "name": "node-easy-notes-app",
-  "version": "1.0.0",
-  "description": "Never miss a thing in Life. Take notes quickly. Organize and keep track of all your notes.",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "Express",
-    "RestAPI",
-    "MongoDB",
-    "Mongoose",
-    "Notes"
-  ],
-  "author": "callicoder",
-  "license": "MIT"
-}
-
-Is this ok? (yes) yes
-Note that I’ve specified a file named server.js as the entry point of our application. We’ll create server.js file in the next section.
-
-3. Install dependencies
+#### 3. Install dependencies
 
 We will need express, mongoose and body-parser modules in our application. Let’s install them by typing the following command -
 
 $ npm install express body-parser mongoose --save
-I’ve used --save option to save all the dependencies in the package.json file. The final package.json file looks like this -
 
-{
-  "name": "node-easy-notes-app",
-  "version": "1.0.0",
-  "description": "Never miss a thing in Life. Take notes quickly. Organize and keep track of all your notes.",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "Express",
-    "RestAPI",
-    "MongoDB",
-    "Mongoose",
-    "Notes"
-  ],
-  "author": "callicoder",
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.3",
-    "mongoose": "^5.2.8"
-  }
-}
-Our application folder now has a package.json file and a node_modules folder -
-
-node-easy-notes-app
-    └── node_modules/
-    └── package.json
-Setting up the web server
+### Setting up the web server
 Let’s now create the main entry point of our application. Create a new file named server.js in the root folder of the application with the following contents -
 
 const express = require('express');
@@ -135,8 +71,8 @@ All right! Let’s now run the server and go to http://localhost:3000 to access 
 
 $ node server.js 
 Server is listening on port 3000
-Node Express MongoDB Rest API
-Configuring and Connecting to the database
+
+### Configuring and Connecting to the database
 I like to keep all the configurations for the app in a separate folder. Let’s create a new folder config in the root folder of our application for keeping all the configurations -
 
 $ mkdir config
@@ -150,7 +86,7 @@ We’ll now import the above database configuration in server.js and connect to 
 
 Add the following code to the server.js file after app.use(bodyParser.json()) line -
 
-// Configuring the database
+#### // Configuring the database
 const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
 
@@ -171,8 +107,7 @@ $ node server.js
 Server is listening on port 3000
 Successfully connected to the database
 
- 
-Defining the Note model in Mongoose
+ #### Defining the Note model in Mongoose
 Next, We will define the Note model. Create a new folder called app inside the root folder of the application, then create another folder called models inside the app folder -
 
 $ mkdir -p app/models
@@ -193,7 +128,7 @@ The Note model is very simple. It contains a title and a content field. I have a
 
 Mongoose uses this option to automatically add two new fields - createdAt and updatedAt to the schema.
 
-Defining Routes using Express
+#### Defining Routes using Express
 Next up is the routes for the Notes APIs. Create a new folder called routes inside the app folder.
 
 $ mkdir app/routes
@@ -238,7 +173,7 @@ module.js:472
 Error: Cannot find module '../controllers/note.controller.js'
 This is because we haven’t defined the controller yet. Let’s do that now.
 
-Writing the Controller functions
+#### Writing the Controller functions
 Create a new folder called controllers inside the app folder, then create a new file called note.controller.js inside app/controllers folder with the following contents -
 
 const Note = require('../models/note.model.js');
@@ -267,9 +202,10 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
 
 };
-Let’s now look at the implementation of the above controller functions one by one -
 
-Creating a new Note
+#### Let’s now look at the implementation of the above controller functions one by one -
+
+##### Creating a new Note
 // Create and Save a new Note
 exports.create = (req, res) => {
     // Validate request
@@ -295,7 +231,7 @@ exports.create = (req, res) => {
         });
     });
 };
-Retrieving all Notes
+##### Retrieving all Notes
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
     Note.find()
@@ -307,7 +243,7 @@ exports.findAll = (req, res) => {
         });
     });
 };
-Retrieving a single Note
+##### Retrieving a single Note
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
     Note.findById(req.params.noteId)
@@ -329,7 +265,7 @@ exports.findOne = (req, res) => {
         });
     });
 };
-Updating a Note
+##### Updating a Note
 // Update a note identified by the noteId in the request
 exports.update = (req, res) => {
     // Validate Request
@@ -364,7 +300,7 @@ exports.update = (req, res) => {
 };
 The {new: true} option in the findByIdAndUpdate() method is used to return the modified document to the then() function instead of the original.
 
-Deleting a Note
+##### Deleting a Note
 // Delete a note with the specified noteId in the request
 exports.delete = (req, res) => {
     Note.findByIdAndRemove(req.params.noteId)
@@ -386,16 +322,8 @@ exports.delete = (req, res) => {
         });
     });
 };
-You can check out the documentation of all the methods that we used in the above APIs on Mongoose’s official documentation -
 
-Mongoose save()
-Mongoose find()
-Mongoose findById()
-Mongoose findByIdAndUpdate()
-Mongoose findByIdAndRemove()
-Testing our APIs
-Let’s now test all the APIs one by one using postman.
-
+####
 Creating a new Note using POST /notes API
 Node Express Rest API Create a Note
 Retrieving all Notes using GET /notes API
@@ -406,5 +334,5 @@ Updating a Note using PUT /notes/:noteId API
 Node Express Rest API Update a Note
 Deleting a Note using DELETE /notes/:noteId API
 Node Express Rest API Delete a Note
-Conclusion
-In this tutorial, We learned how to build rest apis in node.js using express framework and mongodb.
+##### Conclusion
+We learned how to build rest apis in node.js using express framework and mongodb.
