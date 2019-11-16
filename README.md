@@ -37,7 +37,7 @@ $ npm install express body-parser mongoose --save
 
 ### Setting up the web server
 Let’s now create the main entry point of our application. Create a new file named server.js in the root folder of the application with the following contents -
-`
+```
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
 // listen for requests
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
-});`
+});```
 First, We import express and body-parser modules. Express, as you know, is a web framework that we’ll be using for building the REST APIs, and body-parser is a module that parses the request (of various content types) and creates a req.body object that we can access in our routes.
 
 Then, We create an express app, and add two body-parser middlewares using express’s app.use() method. A middleware is a function that has access to the request and response objects. It can execute any code, transform the request object, or return a response.
@@ -78,16 +78,16 @@ I like to keep all the configurations for the app in a separate folder. Let’s 
 $ mkdir config
 $ cd config
 Now, Create a new file database.config.js inside config folder with the following contents -
-`
+```
 module.exports = {
     url: 'mongodb://localhost:27017/easy-notes'
-}`
+}```
 We’ll now import the above database configuration in server.js and connect to the database using mongoose.
 
 Add the following code to the server.js file after app.use(bodyParser.json()) line -
 
 #### // Configuring the database
-`const dbConfig = require('./config/database.config.js');
+```const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
@@ -100,7 +100,7 @@ mongoose.connect(dbConfig.url, {
 }).catch(err => {
     console.log('Could not connect to the database. Exiting now...', err);
     process.exit();
-});`
+});```
 Please run the server and make sure that you’re able to connect to the database -
 
 $ node server.js 
@@ -114,7 +114,7 @@ $ mkdir -p app/models
 $ cd app/models
 Now, create a file called note.model.js inside app/models folder with the following contents -
 
-`const mongoose = require('mongoose');
+```const mongoose = require('mongoose');
 
 const NoteSchema = mongoose.Schema({
     title: String,
@@ -123,7 +123,7 @@ const NoteSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('Note', NoteSchema);`
+module.exports = mongoose.model('Note', NoteSchema);```
 The Note model is very simple. It contains a title and a content field. I have also added a timestamps option to the schema.
 
 Mongoose uses this option to automatically add two new fields - createdAt and updatedAt to the schema.
@@ -134,7 +134,7 @@ Next up is the routes for the Notes APIs. Create a new folder called routes insi
 $ mkdir app/routes
 $ cd app/routes
 Now, create a new file called note.routes.js inside app/routes folder with the following contents -
-`
+```
 module.exports = (app) => {
     const notes = require('../controllers/note.controller.js');
 
@@ -152,17 +152,17 @@ module.exports = (app) => {
 
     // Delete a Note with noteId
     app.delete('/notes/:noteId', notes.delete);
-}`
+}```
 Note that We have added a require statement for note.controller.js file. We’ll define the controller file in the next section. The controller will contain methods for handling all the CRUD operations.
 
 Before defining the controller, let’s first include the routes in server.js. Add the following require statement before app.listen() line inside server.js file.
-`
+```
 // ........
 
 // Require Notes routes
 require('./app/routes/note.routes.js')(app);
 
-// ........`
+// ........```
 If you run the server now, you’ll get the following error -
 
 $ node server.js
@@ -175,7 +175,7 @@ This is because we haven’t defined the controller yet. Let’s do that now.
 
 #### Writing the Controller functions
 Create a new folder called controllers inside the app folder, then create a new file called note.controller.js inside app/controllers folder with the following contents -
-`
+```
 const Note = require('../models/note.model.js');
 
 // Create and Save a new Note
@@ -201,12 +201,13 @@ exports.update = (req, res) => {
 // Delete a note with the specified noteId in the request
 exports.delete = (req, res) => {
 
-};`
+};```
 
 #### Let’s now look at the implementation of the above controller functions one by one -
 
 ##### Creating a new Note
-`// Create and Save a new Note
+```
+// Create and Save a new Note
 exports.create = (req, res) => {
     // Validate request
     if(!req.body.content) {
@@ -230,9 +231,10 @@ exports.create = (req, res) => {
             message: err.message || "Some error occurred while creating the Note."
         });
     });
-};`
+};```
 ##### Retrieving all Notes
-`// Retrieve and return all notes from the database.
+```
+// Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
     Note.find()
     .then(notes => {
@@ -242,9 +244,9 @@ exports.findAll = (req, res) => {
             message: err.message || "Some error occurred while retrieving notes."
         });
     });
-};`
+};```
 ##### Retrieving a single Note
-`// Find a single note with a noteId
+```// Find a single note with a noteId
 exports.findOne = (req, res) => {
     Note.findById(req.params.noteId)
     .then(note => {
@@ -264,9 +266,9 @@ exports.findOne = (req, res) => {
             message: "Error retrieving note with id " + req.params.noteId
         });
     });
-};`
+};```
 ##### Updating a Note
-`// Update a note identified by the noteId in the request
+```// Update a note identified by the noteId in the request
 exports.update = (req, res) => {
     // Validate Request
     if(!req.body.content) {
@@ -297,11 +299,11 @@ exports.update = (req, res) => {
             message: "Error updating note with id " + req.params.noteId
         });
     });
-};`
+};```
 The {new: true} option in the findByIdAndUpdate() method is used to return the modified document to the then() function instead of the original.
 
 ##### Deleting a Note
-`// Delete a note with the specified noteId in the request
+```// Delete a note with the specified noteId in the request
 exports.delete = (req, res) => {
     Note.findByIdAndRemove(req.params.noteId)
     .then(note => {
@@ -321,7 +323,7 @@ exports.delete = (req, res) => {
             message: "Could not delete note with id " + req.params.noteId
         });
     });
-};`
+};```
 
 ####
 Creating a new Note using POST /notes API
