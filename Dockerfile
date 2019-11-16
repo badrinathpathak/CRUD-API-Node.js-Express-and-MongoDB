@@ -16,7 +16,7 @@ COPY . CRUD-API-Node.js-Express-and-MongoDB/
 
 WORKDIR /usr/src/app/CRUD-API-Node.js-Express-and-MongoDB
 
-RUN npm install
+RUN cd src && npm install
 
 
 COPY start.sh /start.sh
