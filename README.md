@@ -6,7 +6,8 @@ Express is one of the most popular web frameworks for node.js. It is built on to
 
 Mongoose is an ODM (Object Document Mapping) tool for Node.js and MongoDB. It helps you convert the objects in your code to documents in the database and vice versa.  
 
-## Prerequisites:  Please install MongoDB in your machine if you have not done already. Checkout the official MogngoDB installation manual for any help with the installation. ##
+## Prerequisites:  
+Please install MongoDB in your machine if you have not done already. Checkout the official MogngoDB installation manual for any help with the installation.
 
 
 ### Our Application ###
